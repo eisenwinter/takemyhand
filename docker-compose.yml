@@ -1,0 +1,28 @@
+#################################
+## TakeMyHand DEV SETUP
+#################################
+version: "3.1"
+services:
+  php-fpm:
+    build: docker-cfg/php
+    container_name: tmh-php-fpm
+    working_dir: /application
+    volumes:
+      - .:/application
+      - ./docker-cfg/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+    networks:
+      - lock-dev
+  webserver:
+    image: nginx:alpine
+    container_name: tmh-nginx
+    working_dir: /application
+    volumes:
+        - .:/application
+        - ./docker-cfg/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+     - "6969:80"
+    networks:
+      - lock-dev
+networks:
+  lock-dev:
+    driver: bridge
